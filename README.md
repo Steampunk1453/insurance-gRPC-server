@@ -14,7 +14,7 @@
      
 * To test gRPC server endpoints use this gRPC client with test data:
       
-     Run client: ~/go/src/github.com/insurance-gRPC-server`go run client/client.go` 
+     Wait delay time (1 minute) and run client: ~/go/src/github.com/insurance-gRPC-server`go run client/client.go` 
       
 * TODO
     
