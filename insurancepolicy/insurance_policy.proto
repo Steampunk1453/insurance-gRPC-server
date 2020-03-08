@@ -1,0 +1,56 @@
+// Copyright 2015 gRPC authors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+package insurancepolicy;
+
+// Interface exported by the server.
+service InsurancePolicy {
+  // A simple RPC.
+  //
+  // Returns a policy holder and its policies by userID.
+  //
+  rpc GetContactAndPoliciesById(User) returns (InsuranceResponse) {}
+
+
+  // A simple RPC.
+  //
+  // Returns a single policyholder and its policies by MobileNumber.
+  //
+  rpc GetContactsAndPoliciesByMobileNumber(User) returns (InsuranceResponse) {}
+}
+
+// Users are policy holders
+message User {
+  int64 ID = 1;
+  string name = 2;
+  string mobile_number = 3;
+}
+
+
+// Policies data
+message Policy {
+  int64 ID = 1;
+  string  mobile_number = 2;
+  int32 premium = 3;
+  string type = 4;
+}
+
+// To generate a response
+message InsuranceResponse {
+   User user = 1;
+   repeated Policy policies = 2;
+}
+
