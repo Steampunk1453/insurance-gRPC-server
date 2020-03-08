@@ -7,6 +7,7 @@ import (
 	pb "github.com/insurance-policy/insurancepolicy"
 	"github.com/insurance-policy/repository"
 	"github.com/insurance-policy/service"
+	"github.com/jasonlvhit/gocron"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/testdata"
@@ -19,6 +20,7 @@ var (
 	certFile   = flag.String("cert_file", "", "The TLS cert file")
 	keyFile    = flag.String("key_file", "", "The TLS key file")
 	port       = flag.Int("port", 10000, "The server port")
+	schedulePeriod = flag.Uint64("schedule_period", 1, "Scheduler execution period in minutes")
 )
 
 var server *insurancePolicyServer
@@ -111,10 +113,27 @@ func (s *insurancePolicyServer) getPoliciesByMobile(mobileNumber string) ([]*pb.
 	return policies, nil
 }
 
-func main() {
-	// Retrieve and save data from an external REST API
+func Import() {
+	// Import and save data from an external REST API
 	server.loadUsers()
 	server.loadPolicies()
+}
+
+func runScheduler(interval uint64) {
+	if interval != 0 {
+		s := gocron.NewScheduler()
+		s.Every(interval).Minutes().Do(Import)
+		<- s.Start()
+	} else {
+		gocron.Remove(Import)
+	}
+}
+
+func main() {
+	// Start scheduler
+	go func() {
+		runScheduler(*schedulePeriod)
+	}()
 	// Boot server
 	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", *port))
 	if err != nil {
