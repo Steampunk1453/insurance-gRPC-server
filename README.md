@@ -16,8 +16,3 @@
       
      Wait delay time (1 minute) and run client: ~/go/src/github.com/insurance-gRPC-server`go run client/client.go` 
       
-* TODO
-    
-    Implement unit tests with mocks
-     
-    
